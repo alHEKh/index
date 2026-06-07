@@ -1,0 +1,6 @@
+{
+  "name": "Al-Sheikh Computers",
+  "description": "موقع متكامل لمركز الشيخ للحاسبات في البصرة، يتميز بنظام إدارة منتجات وطلبات ومبيعات متقدم، سلة مشتريات ذكية، تتبع طلبات وفواتير احترافية ولوحة تحكم شاملة للمدير.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
