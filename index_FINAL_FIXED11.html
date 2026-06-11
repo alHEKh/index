@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مركز الشيخ للحاسبات | البصرة</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0f172a,#111827,#1e293b);color:#f1f5f9;min-height:100vh;}
+
+/* ===== NAVBAR ===== */
+.navbar{position:sticky;top:0;z-index:999;display:flex;justify-content:space-between;align-items:center;padding:14px 30px;background:rgba(15,23,42,0.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(251,191,36,0.25);flex-wrap:wrap;gap:12px;}
+.logo{font-size:26px;font-weight:800;background:linear-gradient(135deg,#38bdf8,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
+.search-box{flex:1;min-width:200px;max-width:420px;position:relative;}
+.search-box input{width:100%;padding:11px 20px 11px 44px;border:1px solid #334155;border-radius:60px;background:#1e293b;color:white;font-size:15px;outline:none;font-family:'Cairo',sans-serif;transition:.2s;}
+.search-box input:focus{border-color:#38bdf8;}
+.search-box i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#38bdf8;font-size:15px;}
+.nav-right{display:flex;align-items:center;gap:16px;}
+.cart-icon{font-size:28px;cursor:pointer;position:relative;color:#38bdf8;transition:.2s;}
+.cart-icon:hover{color:#fbbf24;}
+.cart-count{position:absolute;top:-8px;right:-10px;width:20px;height:20px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.login-top-btn{padding:9px 20px;border:1px solid #38bdf8;border-radius:40px;background:transparent;color:#38bdf8;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:.2s;}
+.login-top-btn:hover{background:#38bdf8;color:#0f172a;}
+.login-top-btn.admin-active{background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border-color:#f59e0b;}
+
+/* ===== HERO ===== */
+.hero{padding:50px 30px;text-align:center;background:linear-gradient(145deg,#0f172a,#1e1b2e);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(56,189,248,0.08),transparent 70%);}
+.hero h1{font-size:48px;margin-bottom:14px;background:linear-gradient(to right,#38bdf8,#facc15,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;}
+.hero p{color:#94a3b8;font-size:15px;position:relative;}
+
+/* ===== CATEGORIES ===== */
+.categories{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:20px 24px;}
+.cat-btn{padding:10px 22px;border:1px solid #334155;border-radius:50px;background:#1e293b;color:#cbd5e1;cursor:pointer;font-weight:600;font-size:14px;transition:.25s;font-family:'Cairo',sans-serif;}
+.cat-btn:hover,.cat-btn.active{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#0f172a;border-color:transparent;transform:translateY(-2px);}
+
+/* ===== PRODUCTS ===== */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;padding:24px 30px;}
+.product-card{background:#1e293b;border-radius:20px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.3);transition:.3s;border:1px solid #334155;cursor:pointer;}
+.product-card:hover{transform:translateY(-6px);border-color:#f59e0b;box-shadow:0 16px 40px rgba(245,158,11,0.15);}
+.product-img{height:190px;overflow:hidden;position:relative;}
+.product-img img{width:100%;height:100%;object-fit:cover;transition:.4s;}
+.product-card:hover .product-img img{transform:scale(1.07);}
+.admin-btns{position:absolute;top:8px;left:8px;display:flex;gap:6px;z-index:10;}
+.admin-btn{width:36px;height:36px;border:none;border-radius:10px;color:white;font-size:15px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;transition:.15s;}
+.admin-btn:hover{transform:scale(1.12);}
+.admin-btn.edit{background:#16a34a;}
+.admin-btn.price{background:#f59e0b;}
+.admin-btn.img{background:#2563eb;}
+.admin-btn.details{background:#7c3aed;}
+.admin-btn.del{background:#dc2626;}
+.product-info{padding:16px;}
+.product-name{font-size:17px;font-weight:800;margin-bottom:5px;color:#facc15;line-height:1.3;}
+.product-desc{color:#94a3b8;margin-bottom:10px;font-size:13px;line-height:1.5;}
+.product-price{font-size:22px;font-weight:800;color:#f59e0b;}
+.add-to-cart{margin-top:12px;width:100%;padding:11px;border:none;border-radius:40px;background:linear-gradient(135deg,#22c55e,#15803d);color:white;font-weight:700;font-size:14px;cursor:pointer;font-family:'Cairo',sans-serif;transition:.2s;}
+.add-to-cart:hover{transform:scale(1.02);box-shadow:0 4px 14px rgba(34,197,94,.4);}
+.view-details-hint{font-size:12px;color:#64748b;text-align:center;margin-top:6px;}
+
+/* ===== PRODUCT DETAIL MODAL ===== */
+.product-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.product-modal.open{display:flex;}
+.pm-box{background:#1e293b;border-radius:24px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;border:1px solid #334155;box-shadow:0 30px 60px rgba(0,0,0,.6);animation:pmIn .25s ease;}
+@keyframes pmIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.pm-img{width:100%;height:280px;object-fit:cover;border-radius:24px 24px 0 0;}
+.pm-body{padding:24px;}
+.pm-title{font-size:24px;font-weight:800;color:#facc15;margin-bottom:8px;}
+.pm-desc{color:#94a3b8;font-size:15px;line-height:1.7;margin-bottom:16px;}
+.pm-price{font-size:32px;font-weight:800;color:#f59e0b;margin-bottom:20px;}
+.pm-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.pm-spec{background:#111827;border-radius:12px;padding:12px 16px;border:1px solid #334155;}
+.pm-spec-label{font-size:12px;color:#64748b;margin-bottom:3px;}
+.pm-spec-val{font-size:14px;font-weight:700;color:#f1f5f9;}
+.pm-actions{display:flex;gap:12px;}
+.pm-add-btn{flex:1;padding:14px;border:none;border-radius:40px;background:linear-gradient(135deg,#22c55e,#15803d);color:white;font-weight:800;font-size:16px;cursor:pointer;font-family:'Cairo',sans-serif;}
+.pm-close-btn{padding:14px 20px;border:1px solid #475569;border-radius:40px;background:transparent;color:#94a3b8;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;}
+.pm-close-btn:hover{background:#374151;}
+.pm-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:30px;font-size:13px;font-weight:700;margin-bottom:14px;}
+.pm-badge-warranty{background:#14532d;color:#86efac;}
+.pm-badge-avail{background:#1e3a5f;color:#7dd3fc;}
+
+/* ===== CART ===== */
+.cart-sidebar{position:fixed;left:-620px;top:0;width:600px;height:100%;background:#0f172a;padding:24px;transition:.35s;overflow-y:auto;z-index:9999;border-right:3px solid #f59e0b;}
+.cart-sidebar.open{left:0;}
+.close-btn{background:#dc2626;color:white;border:none;padding:10px 20px;border-radius:40px;cursor:pointer;margin-bottom:18px;font-weight:700;font-family:'Cairo',sans-serif;}
+.customer-info input,.customer-info textarea{width:100%;padding:12px 16px;border:1px solid #475569;margin-top:12px;border-radius:16px;background:#1e293b;color:white;font-family:'Cairo',sans-serif;font-size:14px;outline:none;}
+.customer-info input:focus,.customer-info textarea:focus{border-color:#38bdf8;}
+.warranty-box{margin-top:20px;padding:16px;border-radius:18px;background:#14532d;border-right:4px solid #4ade80;font-size:14px;}
+.checkout-btn,.print-btn{width:100%;padding:14px;border:none;border-radius:60px;font-weight:800;margin-top:14px;cursor:pointer;font-size:15px;font-family:'Cairo',sans-serif;}
+.checkout-btn{background:linear-gradient(135deg,#25D366,#0c6b3f);color:white;}
+.print-btn{background:linear-gradient(135deg,#f59e0b,#b45309);color:white;}
+
+/* ===== CART EMPTY ===== */
+.cart-empty{text-align:center;padding:40px;background:white;border-radius:20px;}
+
+/* ===== INVOICE ===== */
+.invoice-wrapper{background:white;border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.invoice-header{text-align:center;margin-bottom:20px;border-bottom:2px solid #f59e0b;padding-bottom:14px;}
+.invoice-header h2{color:#1e293b;font-size:22px;font-weight:800;}
+.invoice-header p{color:#475569;font-size:13px;}
+.company-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.company-details{background:#f8fafc;padding:12px 16px;border-radius:14px;border-right:4px solid #f59e0b;}
+.company-details p{margin:4px 0;color:#1e293b;font-size:13px;}
+.stamp-circle{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:90px;height:90px;border-radius:50%;border:3px double #f59e0b;background:linear-gradient(145deg,#fff8e7,#fffbeb);font-weight:900;color:#d97706;font-size:12px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.1);}
+.invoice-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
+.invoice-table th{background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:12px 8px;font-weight:800;text-align:center;}
+.invoice-table td{background:#fff;color:#1e293b;padding:10px 8px;border-bottom:1px solid #e2e8f0;text-align:center;font-weight:500;}
+.invoice-total-row td{background:#fef9c3;color:#b45309;font-size:16px;font-weight:900;border-top:2px solid #f59e0b;}
+.invoice-footer{margin-top:20px;padding-top:12px;border-top:1px dashed #cbd5e1;text-align:center;color:#475569;font-size:12px;}
+.warranty-text{background:#dcfce7;color:#166534;padding:8px;border-radius:10px;font-size:12px;text-align:center;margin-top:12px;}
+
+/* ===== ADMIN PANEL ===== */
+.admin-panel{background:#111827;border:1px solid #f59e0b;border-radius:20px;padding:20px;margin:20px;display:none;}
+.admin-panel h2{color:#facc15;margin-bottom:16px;font-size:20px;}
+.admin-input{width:100%;padding:12px 16px;margin-top:10px;border:1px solid #334155;border-radius:14px;background:#1e293b;color:white;font-family:'Cairo',sans-serif;font-size:14px;outline:none;}
+.admin-input:focus{border-color:#38bdf8;}
+.admin-action-btn{width:100%;padding:12px;margin-top:10px;border:none;border-radius:40px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Cairo',sans-serif;}
+.admin-action-btn.save{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:white;}
+.admin-action-btn.publish{background:linear-gradient(135deg,#16a34a,#15803d);color:white;}
+
+/* ===== DASHBOARD ===== */
+.dashboard-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;padding:20px;display:none;}
+.stat-card{background:linear-gradient(145deg,#111827,#1e293b);padding:20px;border-radius:20px;border:1px solid rgba(255,255,255,.08);text-align:center;}
+.stat-card h3{font-size:15px;margin-bottom:8px;color:#38bdf8;}
+.stat-card p{font-size:28px;font-weight:800;color:#facc15;}
+
+/* ===== ORDERS PANEL ===== */
+.orders-panel{background:#1e293b;margin:20px;padding:20px;border-radius:20px;border:1px solid #334155;display:none;}
+.orders-panel h2{margin-bottom:14px;color:#facc15;}
+.order-item{padding:12px;background:#111827;border-radius:14px;margin-top:10px;border-right:3px solid #38bdf8;}
+
+/* ===== NOTIFICATIONS ===== */
+.notification{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#22c55e,#15803d);color:white;padding:14px 22px;border-radius:16px;display:none;z-index:999999;font-weight:700;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+
+/* ===== LOGIN MODAL ===== */
+.login-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:99999;backdrop-filter:blur(4px);}
+.login-box{background:#111827;padding:32px;border-radius:24px;width:340px;text-align:center;border:1px solid #334155;}
+.login-box h2{font-size:20px;color:#f1f5f9;margin-bottom:18px;}
+.login-input{width:100%;padding:13px 16px;margin-top:10px;border:1px solid #334155;border-radius:14px;background:#1e293b;color:white;font-family:'Cairo',sans-serif;font-size:14px;outline:none;}
+.login-input:focus{border-color:#38bdf8;}
+.login-submit-btn{width:100%;padding:13px;margin-top:12px;border:none;border-radius:14px;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;font-size:15px;}
+.login-submit-btn.primary{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:white;}
+.login-submit-btn.success{background:linear-gradient(135deg,#22c55e,#15803d);color:white;}
+.login-submit-btn.danger{background:#dc2626;color:white;}
+
+/* ===== TOOLS BAR ===== */
+.top-tools{display:flex;gap:10px;justify-content:center;padding:14px 20px;flex-wrap:wrap;background:rgba(15,23,42,.5);}
+.tool-btn{padding:10px 18px;border:1px solid #334155;border-radius:40px;font-weight:700;cursor:pointer;background:#1e293b;color:#f1f5f9;font-family:'Cairo',sans-serif;font-size:14px;transition:.2s;}
+.tool-btn:hover{border-color:#38bdf8;color:#38bdf8;}
+
+/* ===== MODE TOGGLE ===== */
+.mode-toggle{position:fixed;bottom:24px;left:24px;width:52px;height:52px;border:none;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;font-size:20px;cursor:pointer;z-index:999999;box-shadow:0 4px 16px rgba(0,0,0,.4);}
+
+/* ===== DISCOUNT ===== */
+.discount-section{padding:0 20px 14px;}
+.discount-row{display:flex;gap:10px;}
+.discount-input{flex:1;padding:11px 16px;border:1px solid #334155;border-radius:40px;background:#1e293b;color:white;font-family:'Cairo',sans-serif;font-size:14px;outline:none;}
+.discount-input:focus{border-color:#22c55e;}
+.discount-btn{padding:11px 20px;border:none;border-radius:40px;background:linear-gradient(135deg,#22c55e,#15803d);color:white;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;white-space:nowrap;}
+
+/* ===== FOOTER ===== */
+footer{text-align:center;padding:40px;background:#020617;margin-top:50px;border-top:1px solid rgba(245,158,11,.3);}
+footer h3{color:#facc15;font-size:20px;margin-bottom:8px;}
+footer p{color:#64748b;font-size:14px;}
+
+/* ===== LIGHT MODE ===== */
+body.light-mode{background:#f1f5f9 !important;color:#1e293b !important;}
+body.light-mode .navbar{background:rgba(255,255,255,.97) !important;}
+body.light-mode .product-card{background:white !important;border-color:#e2e8f0 !important;}
+body.light-mode .product-name{color:#d97706 !important;}
+body.light-mode .product-desc{color:#64748b !important;}
+body.light-mode .cart-sidebar{background:#fff !important;}
+body.light-mode .cat-btn{background:#e2e8f0 !important;color:#1e293b !important;}
+body.light-mode .hero{background:linear-gradient(145deg,#e0f2fe,#f0f9ff) !important;}
+body.light-mode .pm-box{background:#ffffff !important;}
+body.light-mode .pm-spec{background:#f8fafc !important;}
+
+/* ===== PRINT ===== */
+@media print{
+  body * { visibility: hidden; }
+  .cart-sidebar, .cart-sidebar * { visibility: visible; }
+  .cart-sidebar { position: absolute; left: 0; top: 0; width: 100%; background: white; }
+  .close-btn,.checkout-btn,.print-btn,.customer-info,.warranty-box { display: none !important; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .navbar{padding:12px 16px;}
+  .hero h1{font-size:30px;}
+  .products-grid{padding:16px;gap:16px;}
+  .cart-sidebar{width:100%;}
+  .invoice-table th,.invoice-table td{font-size:11px;padding:7px 4px;}
+  .pm-specs{grid-template-columns:1fr;}
+  .pm-box{border-radius:18px;}
+  .pm-img{height:200px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyC-R5udVG5QHqBMQMFuhYHMBIHUjYpb1tI",
+  authDomain: "alshekh-910d2.firebaseapp.com",
+  projectId: "alshekh-910d2",
+  storageBucket: "alshekh-910d2.firebasestorage.app",
+  messagingSenderId: "719596873503",
+  appId: "1:719596873503:web:96ca786645cf9c0314f22a"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+window._firebaseDb = db;
+window._fbDoc = doc;
+window._fbSetDoc = setDoc;
+window._fbGetDoc = getDoc;
+window._firebaseReady = true;
+</script>
+
+<!-- NOTIFICATION -->
+<div class="notification" id="notificationBox"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-modal" id="authModal">
+  <div class="login-box">
+    <h2><i class="fas fa-user-shield"></i> تسجيل الدخول</h2>
+    <input class="login-input" type="text" id="authUsername" placeholder="اسم المستخدم">
+    <input class="login-input" type="password" id="authPassword" placeholder="كلمة المرور">
+    <button class="login-submit-btn success" onclick="loginUser()">تسجيل الدخول / إنشاء حساب</button>
+    <button class="login-submit-btn danger" style="margin-top:8px;" onclick="closeAuthModal()">إغلاق</button>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="product-modal" id="productModal">
+  <div class="pm-box">
+    <img class="pm-img" id="pmImg" src="" alt="">
+    <div class="pm-body">
+      <span class="pm-badge pm-badge-avail"><i class="fas fa-check-circle"></i> متوفر في المخزن</span>
+      <span class="pm-badge pm-badge-warranty" style="margin-right:8px;"><i class="fas fa-shield-alt"></i> ضمان 7 أيام</span>
+      <div class="pm-title" id="pmTitle"></div>
+      <div class="pm-desc" id="pmDesc"></div>
+      <div class="pm-price" id="pmPrice"></div>
+      <div class="pm-specs" id="pmSpecs"></div>
+      <div class="pm-actions">
+        <button class="pm-add-btn" id="pmAddBtn"><i class="fas fa-cart-plus"></i> إضافة إلى السلة</button>
+        <button class="pm-close-btn" onclick="closeProductModal()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo"><i class="fas fa-microchip"></i> مركز الشيخ للحاسبات</div>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+    <i class="fas fa-search"></i>
+  </div>
+  <div class="nav-right">
+    <button class="login-top-btn" id="loginTopBtn" onclick="openAuthModal()">
+      <i class="fas fa-user"></i> دخول
+    </button>
+    <div class="cart-icon" id="cartIcon">
+      <i class="fas fa-cart-shopping"></i>
+      <div class="cart-count" id="cartCount">0</div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>مركز الشيخ للحاسبات</h1>
+  <p>البصرة • راوتر • لابتوب • طابعة • كروت شاشة • منظومات كاميرات • يو بي إس • جميع الملحقات</p>
+</div>
+
+<!-- TOOLS BAR -->
+<div class="top-tools" id="topTools">
+  <div class="discount-section" style="width:100%;padding:0;">
+    <div class="discount-row" style="max-width:400px;margin:0 auto;">
+      <input class="discount-input" type="text" id="discountCodeInput" placeholder="رمز الخصم">
+      <button class="discount-btn" onclick="applyDiscountCode()"><i class="fas fa-tag"></i> تطبيق</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <h2>⚙️ لوحة تحكم المدير</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;flex-wrap:wrap;">
+    <input class="admin-input" type="text" id="newProductName" placeholder="اسم المنتج الجديد" style="grid-column:1/-1;">
+    <input class="admin-input" type="text" id="newProductDesc" placeholder="وصف المنتج">
+    <input class="admin-input" type="number" id="newProductPrice" placeholder="السعر (د.ع)">
+    <input class="admin-input" type="text" id="newProductCategory" placeholder="الفئة">
+    <input class="admin-input" type="text" id="newProductImage" placeholder="رابط الصورة" style="grid-column:1/-1;">
+  </div>
+  <button class="admin-action-btn save" onclick="addNewProduct()"><i class="fas fa-plus"></i> إضافة منتج</button>
+  <button class="admin-action-btn publish" onclick="saveAllChanges()"><i class="fas fa-cloud-upload-alt"></i> حفظ ونشر التغييرات</button>
+  <button class="admin-action-btn" style="background:linear-gradient(135deg,#dc2626,#991b1b);color:white;" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard-cards" id="dashboardCards">
+  <div class="stat-card"><h3>📦 المنتجات</h3><p id="productsCount">0</p></div>
+  <div class="stat-card"><h3>🛒 الطلبات</h3><p id="ordersCount">0</p></div>
+  <div class="stat-card"><h3>👥 المستخدمين</h3><p id="usersCount">0</p></div>
+  <div class="stat-card"><h3>💰 مبيعات اليوم</h3><p id="profitsCount">0 د.ع</p></div>
+</div>
+
+<!-- SAVED ORDERS (admin only) -->
+<div class="orders-panel" id="ordersPanel">
+  <h2>📋 الطلبات الواردة</h2>
+  <div id="savedOrdersList">لا توجد طلبات بعد</div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories" id="categoriesList"></div>
+
+<!-- PRODUCTS GRID -->
+<div class="products-grid" id="productsGrid"></div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <button class="close-btn" id="closeCartBtn"><i class="fas fa-xmark"></i> إغلاق السلة</button>
+  <div id="cartInvoiceContainer"></div>
+  <div class="customer-info">
+    <input type="text" id="customerName" placeholder="الاسم الكامل">
+    <input type="text" id="customerPhone" placeholder="رقم الجوال">
+    <textarea id="customerAddress" placeholder="العنوان - البصرة" rows="2"></textarea>
+  </div>
+  <div class="warranty-box">
+    <label><input type="checkbox" id="agreeWarranty"> أوافق على ضمان الاستبدال لمدة 7 أيام ضد العيوب المصنعية</label>
+  </div>
+  <button class="checkout-btn" id="checkoutBtn"><i class="fab fa-whatsapp"></i> إرسال الطلب (+964 773 842 0751)</button>
+  <button class="print-btn" id="printBtn"><i class="fas fa-print"></i> طباعة الفاتورة</button>
+</div>
+
+<button class="mode-toggle" onclick="toggleMode()" title="تبديل الوضع">🌙</button>
+
+<footer>
+  <h3><i class="fas fa-microchip"></i> مركز الشيخ للحاسبات</h3>
+  <p>البصرة - مقابلة مركز الإمام علي | واتساب: +964 773 842 0751</p>
+</footer>
+
+<script>
+// ============================================================
+//  CONFIG
+// ============================================================
+const ADMIN_USERNAME = "SBHJAFAR";
+const ADMIN_PASSWORD = "SBH2002JAFAR";
+const DISCOUNT_CODE  = "SBHJ";
+
+// ============================================================
+//  STATE
+// ============================================================
+let products = [];
+let cart = [];
+let currentCategory = 'الكل';
+let searchQuery = '';
+
+// ============================================================
+//  ADMIN CHECK  (single source of truth)
+// ============================================================
+function isAdminLoggedIn(){
+  return sessionStorage.getItem('secure_admin') === 'true';
+}
+
+// ============================================================
+//  NOTIFICATION
+// ============================================================
+function showNotification(msg, color){
+  const box = document.getElementById('notificationBox');
+  box.innerText = msg;
+  box.style.background = color || 'linear-gradient(135deg,#22c55e,#15803d)';
+  box.style.display = 'block';
+  clearTimeout(box._t);
+  box._t = setTimeout(()=>{ box.style.display='none'; }, 3200);
+}
+
+// ============================================================
+//  BUILD DEFAULT PRODUCTS
+// ============================================================
+function buildProducts(){
+  let id=1, list=[];
+  for(let i=1;i<=15;i++) list.push({id:id++, name:`يو بي إس ذكي ${750+i*80}VA`, desc:`مثبت جهد أوتوماتيك + حماية كاملة للأجهزة`, price:135000+(i*12000), category:'يوبيس', img:'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?q=80&w=800&auto=format&fit=crop', specs:{'الطاقة':`${750+i*80}VA`,'الجهد':'220V','الضمان':'7 أيام','التوافق':'كل الأجهزة'}});
+  const lap=['HP Victus','HP Omen','Dell XPS','Dell G15','Lenovo Legion Pro','Lenovo ThinkPad X1','Asus ROG Zephyrus','Acer Predator','MSI Stealth','HP EliteBook','Dell Latitude','Lenovo Yoga','Asus TUF','Acer Swift','MacBook Air'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:`لابتوب ${lap[i]}`, desc:`معالج i7/i9 جيل 13 - رام 16GB DDR5 - SSD NVMe`, price:780000+(i*115000), category:'لابتوب', img:'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=800&auto=format&fit=crop', specs:{'المعالج':'i7/i9 Gen13','الرام':'16GB DDR5','التخزين':'SSD NVMe','الضمان':'7 أيام'}});
+  const prn=['كانون Pixma','كانون LBP','برذر DCP','برذر HL','إبسون EcoTank','إبسون Workforce','HP LaserJet','HP Smart Tank','Brother MFC','Canon imageCLASS','Xerox B210','Pantum','Lexmark','Ricoh','Kyocera'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:`طابعة ${prn[i]}`, desc:`طباعة سريعة - واي فاي مدمج - جودة عالية`, price:175000+(i*22000), category:'طابعة', img:'https://images.unsplash.com/photo-1581092921461-39b9d08d9b67?q=80&w=800&auto=format&fit=crop', specs:{'النوع':'ليزر/حبر','الواجهة':'WiFi + USB','السرعة':'20 صفحة/دقيقة','الضمان':'7 أيام'}});
+  for(let i=1;i<=15;i++) list.push({id:id++, name:`سماعة ستيريو ${i}`, desc:`بلوتوث 5.3 - عزل ضوضاء نشط - بطارية 40 ساعة`, price:38000+(i*7000), category:'سماعات', img:'https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop', specs:{'الاتصال':'Bluetooth 5.3','البطارية':'40 ساعة','الميزة':'ANC','الضمان':'7 أيام'}});
+  for(let i=1;i<=10;i++) list.push({id:id++, name:`كرسي قيمنق ${i}`, desc:`مريح للجلسات الطويلة - تعديل ارتفاع وظهر`, price:155000+(i*20000), category:'كراسي ومكاتب', img:'https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=800&auto=format&fit=crop', specs:{'الخامة':'جلد صناعي','التحمل':'150 كغ','الميزة':'تعديل زاوية','الضمان':'7 أيام'}});
+  for(let i=1;i<=5;i++) list.push({id:id++, name:`مكتب حاسوب ${i}`, desc:`تصميم عصري - خامة MDF - سطح واسع`, price:190000+(i*25000), category:'كراسي ومكاتب', img:'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?q=80&w=800&auto=format&fit=crop', specs:{'الخامة':'MDF','الأبعاد':'120×60 سم','اللون':'أسود','الضمان':'7 أيام'}});
+  for(let i=1;i<=15;i++) list.push({id:id++, name:`يد تحكم PS${i%2===0?'5':'4'}`, desc:`أصلية لاسلكية - ذبذبة HD`, price:72000+(i*3500), category:'ملحقات بلي ستيشن', img:'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=800&auto=format&fit=crop', specs:{'النوع':'لاسلكي','البطارية':'10 ساعات','الاتصال':'Bluetooth','الضمان':'7 أيام'}});
+  const pcAcc=['معجون حراري','باور سبلاي 750W','باور سبلاي 850W','كابل SATA','مروحة RGB','مروحة 140mm','مبرد مائي','كيس ATX','رام 16GB DDR5','رام 32GB','SSD 500GB','هارد 2TB','كرت صوت','محول WiFi','حامل شاشة'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:pcAcc[i], desc:`جودة عالية - ضمان المنشأ`, price:14000+(i*9500), category:'ملحقات بيسي', img:'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?q=80&w=800&auto=format&fit=crop', specs:{'الجودة':'A+','التوافق':'عالمي','الضمان':'7 أيام','الحالة':'جديد'}});
+  const boards=['ASUS ROG','Gigabyte AORUS','MSI MEG','ASRock Taichi','ASUS TUF','MSI PRO','Gigabyte B550','ASUS PRIME','Biostar','ASRock Steel','MSI MPG','Gigabyte Z690','ASUS ROG STRIX','Colorful','ECS'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:`مذربورد ${boards[i]}`, desc:`دعم PCIe 5.0 - DDR5 - منافذ M.2 متعددة`, price:195000+(i*27000), category:'مذر بورد', img:'https://images.unsplash.com/photo-1562976540-1502c2145186?q=80&w=800&auto=format&fit=crop', specs:{'المقبس':'LGA1700/AM5','الذاكرة':'DDR5','PCIe':'5.0','الضمان':'7 أيام'}});
+  const gpu=['RTX 3060','RTX 3060 Ti','RTX 3070','RTX 3070 Ti','RTX 3080','RTX 4060','RTX 4060 Ti','RTX 4070','RTX 4070 Ti','RTX 4080','RX 6700 XT','RX 6800','RX 7700 XT','RX 7800 XT','RX 7900 GRE'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:`كارت شاشة ${gpu[i]}`, desc:`أداء خارق - Ray Tracing - DLSS/FSR`, price:380000+(i*145000), category:'كروت شاشة', img:'https://images.unsplash.com/photo-1591488320449-011701bb6704?q=80&w=800&auto=format&fit=crop', specs:{'الذاكرة':'8-16GB GDDR6','الواجهة':'PCIe 4.0','المنافذ':'HDMI + DP','الضمان':'7 أيام'}});
+  for(let i=1;i<=15;i++) list.push({id:id++, name:`منظومة كاميرات ${i} كام`, desc:`DVR احترافي - رؤية ليلية - دقة 4K`, price:350000+(i*52000), category:'منظومات كامرات', img:'https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=800&auto=format&fit=crop', specs:{'عدد الكاميرات':`${i}`,'الدقة':'4K / 1080P','الرؤية الليلية':'نعم','الضمان':'7 أيام'}});
+  const camAcc=['عدسة 2.8mm','عدسة wide','قاعدة حائط','كابل BNC','مصدر طاقة','مفتاح توزيع','DVR 8 قنوات','قرص صلب 2TB','حافظة خارجية','ميكروفون','شاشة مراقبة','محول POE','جهاز تحكم','حامل سقف','كابل 30m'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:camAcc[i], desc:`ملحقات كاميرات - جودة عالية`, price:18000+(i*9500), category:'ملحقات كامرات', img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=800&auto=format&fit=crop', specs:{'النوع':'ملحقات','الجودة':'A+','الضمان':'7 أيام','الحالة':'جديد'}});
+  const netAcc=['راوتر WiFi6','راوتر AX6000','سويتج 8 منفذ','سويتج 16','كابل Cat6','كابل Cat7','محول لاسلكي','بطاقة شبكة','راوتر 5G','موسع واي فاي','بوابة ألياف','بوابة صناعية','محول SFP','بانل إدارة','منظم كابلات'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:netAcc[i], desc:`شبكات احترافية - سرعة عالية`, price:22000+(i*15000), category:'ملحقات الانترنيت', img:'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=800&auto=format&fit=crop', specs:{'المعيار':'WiFi 6','السرعة':'1-10 Gbps','الضمان':'7 أيام','الحالة':'جديد'}});
+  const printAcc=['حبر كانون','حبر برذر','حبر إبسون','ورق A4','ورق صور','درام ليزر','وحدة فاصل','حزام نقل','مستشعر','خزان حبر','رأس طباعة','صينية ورق','عربة تنظيف','بودرة حبر','شريط أحبار'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:printAcc[i], desc:`ملحقات طابعات أصلية`, price:10000+(i*6500), category:'ملحقات الطابعات', img:'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop', specs:{'النوع':'ملحقات أصلية','الجودة':'A+','الضمان':'7 أيام','الحالة':'جديد'}});
+  const routers=['TP-Link Archer AX73','TP-Link Deco X60','Asus RT-AX88U','Asus ROG Rapture','MikroTik hAP ac3','Ubiquiti UniFi','D-Link DIR-X5460','Huawei WiFi AX3','Netgear Nighthawk','TP-Link Archer C80','Asus RT-AC86U','Mercusys MR70X','Linksys E9450','Zyxel ARMOR','Synology RT6600ax'];
+  for(let i=0;i<15;i++) list.push({id:id++, name:`راوتر ${routers[i]}`, desc:`واي فاي 6 - تغطية شاملة - إدارة ذكية`, price:125000+(i*32000), category:'أجهزة راوتر', img:'https://images.unsplash.com/photo-1647427060118-4911c9821b82?q=80&w=800&auto=format&fit=crop', specs:{'المعيار':'WiFi 6 / 6E','السرعة':'تصل 6Gbps','التغطية':'شاملة','الضمان':'7 أيام'}});
+  return list;
+}
+
+// ============================================================
+//  INIT PRODUCTS
+// ============================================================
+(function initProducts(){
+  const saved = localStorage.getItem('secure_products_data');
+  if(saved){
+    try{ products = JSON.parse(saved); }catch(e){ products = buildProducts(); }
+  } else {
+    products = buildProducts();
+  }
+})();
+
+// ============================================================
+//  RENDER CATEGORIES
+// ============================================================
+function renderCategories(){
+  const cats = ['الكل', ...new Set(products.map(p=>p.category))];
+  const el = document.getElementById('categoriesList');
+  el.innerHTML = cats.map(c=>`<button class="cat-btn${c===currentCategory?' active':''}" onclick="setCategory('${c}')">${c}</button>`).join('');
+}
+
+function setCategory(cat){
+  currentCategory = cat;
+  renderCategories();
+  renderProducts();
+}
+
+// ============================================================
+//  RENDER PRODUCTS
+// ============================================================
+function renderProducts(){
+  let filtered = currentCategory==='الكل' ? products : products.filter(p=>p.category===currentCategory);
+  if(searchQuery) filtered = filtered.filter(p=>p.name.includes(searchQuery)||p.desc.includes(searchQuery));
+  const admin = isAdminLoggedIn();
+  const grid = document.getElementById('productsGrid');
+  if(!filtered.length){
+    grid.innerHTML = '<div style="text-align:center;padding:60px;grid-column:1/-1;color:#64748b;"><i class="fas fa-search" style="font-size:48px;margin-bottom:16px;display:block;"></i>لا توجد منتجات مطابقة</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(p=>`
+  <div class="product-card" onclick="openProductModal(${p.id})">
+    <div class="product-img">
+      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      ${admin ? `
+      <div class="admin-btns" onclick="event.stopPropagation()">
+        <button class="admin-btn edit" onclick="changeProductName(${p.id})" title="تعديل الاسم"><i class="fas fa-pen"></i></button>
+        <button class="admin-btn price" onclick="changeProductPrice(${p.id})" title="تعديل السعر"><i class="fas fa-dollar-sign"></i></button>
+        <button class="admin-btn img" onclick="changeProductImage(${p.id})" title="تغيير الصورة"><i class="fas fa-image"></i></button>
+        <button class="admin-btn details" onclick="editProductDetails(${p.id})" title="تعديل التفاصيل"><i class="fas fa-clipboard-list"></i></button>
+        <button class="admin-btn del" onclick="deleteProduct(${p.id})" title="حذف"><i class="fas fa-trash"></i></button>
+      </div>` : ''}
+    </div>
+    <div class="product-info">
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.desc}</div>
+      <div class="product-price">${p.price.toLocaleString()} د.ع</div>
+      <button class="add-to-cart" onclick="event.stopPropagation();addToCart(${p.id})"><i class="fas fa-cart-plus"></i> إضافة للسلة</button>
+      <div class="view-details-hint"><i class="fas fa-info-circle"></i> اضغط لعرض التفاصيل</div>
+    </div>
+  </div>`).join('');
+}
+
+// ============================================================
+//  PRODUCT DETAIL MODAL
+// ============================================================
+function openProductModal(id){
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('pmImg').src = p.img;
+  document.getElementById('pmTitle').innerText = p.name;
+  document.getElementById('pmDesc').innerText = p.desc;
+  document.getElementById('pmPrice').innerText = p.price.toLocaleString() + ' دينار عراقي';
+  const specsEl = document.getElementById('pmSpecs');
+  const specs = p.specs || {};
+  specsEl.innerHTML = Object.entries(specs).map(([k,v])=>`
+    <div class="pm-spec"><div class="pm-spec-label">${k}</div><div class="pm-spec-val">${v}</div></div>`).join('');
+  const addBtn = document.getElementById('pmAddBtn');
+  addBtn.onclick = ()=>{ addToCart(id); closeProductModal(); };
+  document.getElementById('productModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProductModal(){
+  document.getElementById('productModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('productModal').addEventListener('click', function(e){
+  if(e.target===this) closeProductModal();
+});
+
+// ============================================================
+//  CART
+// ============================================================
+function addToCart(id){
+  const prod = products.find(p=>p.id===id);
+  if(!prod) return;
+  const exist = cart.find(i=>i.id===id);
+  if(exist) exist.quantity++;
+  else cart.push({...prod, quantity:1});
+  updateCartCount();
+  renderInvoice();
+  showNotification('✅ تمت إضافة المنتج للسلة');
+}
+
+function updateCartCount(){
+  document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.quantity,0);
+}
+
+function renderInvoice(){
+  const container = document.getElementById('cartInvoiceContainer');
+  if(!cart.length){
+    container.innerHTML = '<div class="cart-empty"><i class="fas fa-shopping-cart" style="font-size:44px;color:#f59e0b;display:block;margin-bottom:12px;"></i><p style="color:#64748b;">السلة فارغة - أضف منتجات أولاً</p></div>';
+    return;
+  }
+  let rows = cart.map((it,i)=>`<tr><td>${i+1}</td><td style="text-align:right;padding-right:8px;">${it.name}</td><td>${it.quantity}</td><td>${it.price.toLocaleString()} د.ع</td><td>${(it.price*it.quantity).toLocaleString()} د.ع</td></tr>`).join('');
+  const total = cart.reduce((s,i)=>s+(i.price*i.quantity),0);
+  container.innerHTML = `
+  <div class="invoice-wrapper">
+    <div class="invoice-header">
+      <h2><i class="fas fa-receipt"></i> فاتورة مركز الشيخ للحاسبات</h2>
+      <p>رقم الفاتورة: INV-${Math.floor(Math.random()*90000+10000)} | التاريخ: ${new Date().toLocaleDateString('ar-EG')}</p>
+    </div>
+    <div class="company-row">
+      <div class="company-details">
+        <p><i class="fas fa-store"></i> <strong>مركز الشيخ للحاسبات</strong></p>
+        <p><i class="fas fa-map-marker-alt"></i> البصرة - مقابلة مركز الإمام علي</p>
+        <p><i class="fab fa-whatsapp"></i> +964 773 842 0751</p>
+      </div>
+      <div class="stamp-circle"><i class="fas fa-certificate"></i><strong>مركز الشيخ</strong>للحاسبات</div>
+    </div>
+    <table class="invoice-table">
+      <thead><tr><th>#</th><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead>
+      <tbody>
+        ${rows}
+        <tr class="invoice-total-row">
+          <td colspan="4"><strong>المبلغ الإجمالي</strong></td>
+          <td><strong>${total.toLocaleString()} دينار عراقي</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warranty-text"><i class="fas fa-shield-alt"></i> جميع المنتجات مغطاة بضمان الاستبدال 7 أيام ضد عيوب التصنيع</div>
+    <div class="invoice-footer"><p>شكراً لثقتكم بمركز الشيخ للحاسبات | مع تحيات إدارة المبيعات</p></div>
+  </div>`;
+}
+
+document.getElementById('cartIcon').onclick = ()=>{
+  document.getElementById('cartSidebar').classList.add('open');
+  renderInvoice();
+};
+document.getElementById('closeCartBtn').onclick = ()=>{
+  document.getElementById('cartSidebar').classList.remove('open');
+};
+
+// ============================================================
+//  CHECKOUT
+// ============================================================
+document.getElementById('checkoutBtn').onclick = ()=>{
+  const name = document.getElementById('customerName').value.trim();
+  const phone = document.getElementById('customerPhone').value.trim();
+  const address = document.getElementById('customerAddress').value.trim();
+  const agree = document.getElementById('agreeWarranty').checked;
+  if(!name||!phone||!address){ showNotification('❌ يرجى ملء جميع البيانات','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  if(!cart.length){ showNotification('❌ السلة فارغة','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  if(!agree){ showNotification('❌ يرجى الموافقة على شروط الضمان','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  const total = cart.reduce((s,i)=>s+(i.price*i.quantity),0);
+  const items = cart.map((it,i)=>`${i+1}. ${it.name} × ${it.quantity} = ${(it.price*it.quantity).toLocaleString()} د.ع`).join('\n');
+  const msg = `🏢 مركز الشيخ للحاسبات - البصرة\n────────────\n👤 الزبون: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}\n────────────\n🛒 الطلبات:\n${items}\n────────────\n💰 الإجمالي: ${total.toLocaleString()} د.ع\n✅ ضمان 7 أيام`;
+  saveOrderHistory({name,phone,address,items:cart,total,date:new Date().toLocaleString('ar-EG')});
+  window.open(`https://wa.me/9647738420751?text=${encodeURIComponent(msg)}`,'_blank');
+};
+
+document.getElementById('printBtn').onclick = ()=>{
+  renderInvoice();
+  setTimeout(()=>window.print(),200);
+};
+
+document.getElementById('searchInput').oninput = e=>{
+  searchQuery = e.target.value;
+  renderProducts();
+};
+
+// ============================================================
+//  DISCOUNT
+// ============================================================
+let discountApplied = false;
+function applyDiscountCode(){
+  const code = document.getElementById('discountCodeInput').value.trim();
+  if(code !== DISCOUNT_CODE){ showNotification('❌ رمز الخصم غير صحيح','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  if(!cart.length){ showNotification('❌ أضف منتجات للسلة أولاً','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  if(discountApplied){ showNotification('⚠️ تم تطبيق الخصم مسبقاً'); return; }
+  cart.forEach(item=>{ item.price = Math.floor(item.price*0.9); });
+  discountApplied = true;
+  renderInvoice();
+  showNotification('🎉 تم تطبيق خصم 10% بنجاح');
+}
+
+// ============================================================
+//  AUTH
+// ============================================================
+function openAuthModal(){ document.getElementById('authModal').style.display='flex'; }
+function closeAuthModal(){ document.getElementById('authModal').style.display='none'; }
+
+function loginUser(){
+  const username = document.getElementById('authUsername').value.trim();
+  const password = document.getElementById('authPassword').value.trim();
+  if(!username||!password){ showNotification('❌ ادخل اسم المستخدم وكلمة المرور','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  if(username===ADMIN_USERNAME && password===ADMIN_PASSWORD){
+    sessionStorage.setItem('secure_admin','true');
+    closeAuthModal();
+    applyAdminUI();
+    showNotification('👑 مرحباً بك أيها المدير');
+    return;
+  }
+  // عميل عادي
+  const key = 'storeUser_'+username;
+  const existing = localStorage.getItem(key);
+  if(!existing){
+    localStorage.setItem(key, JSON.stringify({username,password}));
+    showNotification('✅ تم إنشاء الحساب وتسجيل الدخول');
+  } else {
+    const data = JSON.parse(existing);
+    if(data.password !== password){ showNotification('❌ كلمة المرور غير صحيحة','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+    showNotification('✅ مرحباً بك ' + username);
+  }
+  closeAuthModal();
+}
+
+function adminLogout(){
+  sessionStorage.removeItem('secure_admin');
+  applyAdminUI();
+  showNotification('👋 تم تسجيل خروج المدير');
+}
+
+function applyAdminUI(){
+  const admin = isAdminLoggedIn();
+  document.getElementById('adminPanel').style.display = admin ? 'block' : 'none';
+  document.getElementById('dashboardCards').style.display = admin ? 'grid' : 'none';
+  document.getElementById('ordersPanel').style.display = admin ? 'block' : 'none';
+  const btn = document.getElementById('loginTopBtn');
+  if(admin){
+    btn.textContent = '👑 المدير';
+    btn.classList.add('admin-active');
+    btn.onclick = adminLogout;
+    updateDashboard();
+    renderOrdersList();
+  } else {
+    btn.innerHTML = '<i class="fas fa-user"></i> دخول';
+    btn.classList.remove('admin-active');
+    btn.onclick = openAuthModal;
+  }
+  renderProducts();
+}
+
+// ============================================================
+//  ADMIN EDIT FUNCTIONS
+// ============================================================
+function changeProductName(id){
+  if(!isAdminLoggedIn()){ showNotification('⛔ ليس لديك صلاحية','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  const p = products.find(x=>x.id===id); if(!p) return;
+  const v = prompt('✏️ الاسم الجديد:', p.name);
+  if(v && v.trim()){ p.name=v.trim(); afterEdit(); showNotification('✅ تم تعديل الاسم'); }
+}
+
+function changeProductPrice(id){
+  if(!isAdminLoggedIn()){ showNotification('⛔ ليس لديك صلاحية','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  const p = products.find(x=>x.id===id); if(!p) return;
+  const v = prompt('💰 السعر الجديد (د.ع):', p.price);
+  if(v && !isNaN(v) && Number(v)>0){ p.price=Number(v); afterEdit(); showNotification('✅ تم تعديل السعر'); }
+}
+
+function changeProductImage(id){
+  if(!isAdminLoggedIn()){ showNotification('⛔ ليس لديك صلاحية','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  const p = products.find(x=>x.id===id); if(!p) return;
+  const inp = document.createElement('input');
+  inp.type='file'; inp.accept='image/*';
+  inp.onchange = e=>{
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev=>{ p.img=ev.target.result; afterEdit(); showNotification('✅ تم تغيير الصورة'); };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function editProductDetails(id){
+  if(!isAdminLoggedIn()){ showNotification('⛔ ليس لديك صلاحية','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  const p = products.find(x=>x.id===id); if(!p) return;
+  const name = prompt('الاسم:', p.name); if(name===null) return;
+  const desc = prompt('الوصف:', p.desc); if(desc===null) return;
+  const cat  = prompt('الفئة:', p.category); if(cat===null) return;
+  const price= prompt('السعر:', p.price); if(price===null) return;
+  if(name) p.name=name;
+  if(desc) p.desc=desc;
+  if(cat)  p.category=cat;
+  if(price && !isNaN(price)) p.price=Number(price);
+  afterEdit();
+  showNotification('✅ تم تعديل كامل تفاصيل المنتج');
+}
+
+function deleteProduct(id){
+  if(!isAdminLoggedIn()){ showNotification('⛔ ليس لديك صلاحية','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  if(!confirm('هل تريد حذف هذا المنتج نهائياً؟')) return;
+  products = products.filter(p=>p.id!==id);
+  afterEdit();
+  showNotification('🗑️ تم حذف المنتج');
+}
+
+function addNewProduct(){
+  if(!isAdminLoggedIn()){ showNotification('⛔ ليس لديك صلاحية','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  const name = document.getElementById('newProductName').value.trim();
+  const price= document.getElementById('newProductPrice').value.trim();
+  const img  = document.getElementById('newProductImage').value.trim();
+  const desc = document.getElementById('newProductDesc').value.trim() || 'منتج جديد';
+  const cat  = document.getElementById('newProductCategory').value.trim() || 'منتجات المدير';
+  if(!name||!price||!img){ showNotification('❌ ملء الحقول المطلوبة: اسم - سعر - صورة','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  products.unshift({id:Date.now(),name,desc,price:Number(price),category:cat,img,specs:{'الفئة':cat,'السعر':Number(price).toLocaleString()+' د.ع','الضمان':'7 أيام','الحالة':'جديد'}});
+  document.getElementById('newProductName').value='';
+  document.getElementById('newProductPrice').value='';
+  document.getElementById('newProductImage').value='';
+  document.getElementById('newProductDesc').value='';
+  document.getElementById('newProductCategory').value='';
+  afterEdit();
+  showNotification('✅ تمت إضافة المنتج الجديد');
+}
+
+function afterEdit(){
+  renderCategories();
+  renderProducts();
+  saveProductsLocal();
+  updateDashboard();
+  if(window._firebaseReady) saveToFirebase();
+}
+
+// ============================================================
+//  SAVE / LOAD
+// ============================================================
+function saveProductsLocal(){
+  localStorage.setItem('secure_products_data', JSON.stringify(products));
+}
+
+function saveAllChanges(){
+  if(!isAdminLoggedIn()){ showNotification('⛔ ليس لديك صلاحية','linear-gradient(135deg,#dc2626,#991b1b)'); return; }
+  saveProductsLocal();
+  if(window._firebaseReady) saveToFirebase();
+  else showNotification('💾 تم حفظ التغييرات محلياً');
+}
+
+async function saveToFirebase(){
+  try{
+    const db = window._firebaseDb;
+    await window._fbSetDoc(window._fbDoc(db,'store','products'),{items:products,updated:new Date().toISOString()});
+    showNotification('☁️ تم رفع التغييرات للسيرفر');
+  }catch(e){ console.error(e); }
+}
+
+async function loadFromFirebase(){
+  try{
+    const db = window._firebaseDb;
+    const snap = await window._fbGetDoc(window._fbDoc(db,'store','products'));
+    if(snap.exists()){
+      const data = snap.data().items;
+      if(data && data.length){ products=data; renderCategories(); renderProducts(); }
+    }
+  }catch(e){ console.error(e); }
+}
+
+// ============================================================
+//  DASHBOARD
+// ============================================================
+function updateDashboard(){
+  if(!isAdminLoggedIn()) return;
+  document.getElementById('productsCount').innerText = products.length;
+  const orders = JSON.parse(localStorage.getItem('all_orders')||'[]');
+  document.getElementById('ordersCount').innerText = orders.length;
+  const users = Object.keys(localStorage).filter(k=>k.startsWith('storeUser_'));
+  document.getElementById('usersCount').innerText = users.length;
+  const today = new Date().toLocaleDateString();
+  const todaySales = JSON.parse(localStorage.getItem('today_sales')||'[]');
+  const daily = todaySales.filter(s=>s.date===today).reduce((s,i)=>s+i.amount,0);
+  document.getElementById('profitsCount').innerText = daily.toLocaleString() + ' د.ع';
+}
+
+// ============================================================
+//  ORDER HISTORY
+// ============================================================
+function saveOrderHistory(order){
+  const orders = JSON.parse(localStorage.getItem('all_orders')||'[]');
+  orders.unshift(order);
+  localStorage.setItem('all_orders', JSON.stringify(orders));
+  const sales = JSON.parse(localStorage.getItem('today_sales')||'[]');
+  sales.push({amount:order.total, date:new Date().toLocaleDateString()});
+  localStorage.setItem('today_sales', JSON.stringify(sales));
+}
+
+function renderOrdersList(){
+  const orders = JSON.parse(localStorage.getItem('all_orders')||'[]');
+  const el = document.getElementById('savedOrdersList');
+  if(!orders.length){ el.innerHTML='<p style="color:#64748b;">لا توجد طلبات بعد</p>'; return; }
+  el.innerHTML = orders.slice(0,20).map(o=>`
+  <div class="order-item">
+    <strong>${o.name||'زبون'}</strong> — <span style="color:#38bdf8;">${o.total.toLocaleString()} د.ع</span>
+    <span style="float:left;color:#64748b;font-size:13px;">${o.date||''}</span><br>
+    <span style="color:#94a3b8;font-size:13px;">${o.phone||''} | ${o.address||''}</span>
+  </div>`).join('');
+}
+
+// ============================================================
+//  LIGHT / DARK MODE
+// ============================================================
+function toggleMode(){
+  document.body.classList.toggle('light-mode');
+  const m = document.getElementById('mode-toggle-btn');
+  const isLight = document.body.classList.contains('light-mode');
+  document.querySelector('.mode-toggle').innerText = isLight ? '🌞' : '🌙';
+  localStorage.setItem('theme_mode', isLight?'light':'dark');
+}
+(function(){ if(localStorage.getItem('theme_mode')==='light') document.body.classList.add('light-mode'); })();
+
+// ============================================================
+//  KEYBOARD PROTECTION
+// ============================================================
+document.addEventListener('contextmenu', e=>{ if(!isAdminLoggedIn()) e.preventDefault(); });
+document.addEventListener('keydown', e=>{
+  if(!isAdminLoggedIn() && (e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key))||(e.ctrlKey&&e.key==='u'))) e.preventDefault();
+});
+
+// ============================================================
+//  INIT
+// ============================================================
+window.addEventListener('load', ()=>{
+  renderCategories();
+  renderProducts();
+  applyAdminUI();
+  if(window._firebaseReady) loadFromFirebase();
+  else setTimeout(()=>{ if(window._firebaseReady) loadFromFirebase(); }, 2000);
+});
+
+// Close product modal on Escape
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeProductModal(); });
+</script>
+
+</body>
+</html>
